@@ -1,81 +1,455 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>OrangeCraft - Minecraft Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrangeCraft - Free Minecraft Server Hosting</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --orange-primary: #FF6B35;
+            --orange-dark: #E55A2B;
+            --orange-light: #FF8E53;
+            --dark-bg: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-primary: #ffffff;
+            --text-secondary: #8b949e;
+            --online: #238636;
+            --offline: #f85149;
+            --button-bg: #21262d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
         body {
-            background: #1a1a2e;
-            color: white;
-            font-family: Arial;
-            padding: 20px;
-            text-align: center;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.5;
         }
+        
+        /* Header */
         .header {
-            background: #16213e;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 5px solid #ff6b35;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .server {
-            background: #0f3460;
-            padding: 15px;
-            margin: 15px auto;
-            border-radius: 8px;
-            max-width: 500px;
-            border: 1px solid #ff6b35;
+        
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        button {
-            background: #ff6b35;
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--orange-primary);
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .nav-tab {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .nav-tab:hover, .nav-tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--orange-primary);
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+        
+        /* Create Server Button */
+        .create-server-btn {
+            background-color: var(--orange-primary);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin: 5px;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            transition: background-color 0.2s;
         }
-        .online { color: #4caf50; }
-        .offline { color: #f44336; }
+        
+        .create-server-btn:hover {
+            background-color: var(--orange-dark);
+        }
+        
+        /* Server List */
+        .servers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .server-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.2s;
+        }
+        
+        .server-card:hover {
+            border-color: var(--orange-light);
+        }
+        
+        .server-info {
+            flex: 1;
+        }
+        
+        .server-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .server-id {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-family: monospace;
+            margin-bottom: 4px;
+        }
+        
+        .server-software {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: rgba(255, 107, 53, 0.1);
+            color: var(--orange-light);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .server-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-control {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--button-bg);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-control:hover {
+            border-color: var(--orange-primary);
+            color: var(--orange-primary);
+        }
+        
+        .btn-start {
+            background-color: var(--online);
+            border-color: var(--online);
+            color: white;
+        }
+        
+        .btn-start:hover {
+            background-color: #2ea043;
+            border-color: #2ea043;
+            color: white;
+        }
+        
+        /* Status Indicator */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 12px;
+        }
+        
+        .status-online {
+            background-color: rgba(35, 134, 54, 0.1);
+            color: var(--online);
+        }
+        
+        .status-offline {
+            background-color: rgba(248, 81, 73, 0.1);
+            color: var(--offline);
+        }
+        
+        .status i {
+            font-size: 8px;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .server-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .server-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🧡 OrangeCraft Dashboard</h1>
-        <p>Free Minecraft Server Manager</p>
-    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">O</div>
+                <div class="logo-text">OrangeCraft</div>
+            </div>
+            <nav class="nav-tabs">
+                <a href="#" class="nav-tab active">
+                    <i class="fas fa-server"></i> My Servers
+                </a>
+                <a href="#" class="nav-tab">
+                    <i class="fas fa-question-circle"></i> Help
+                </a>
+                <a href="#" class="nav-tab">
+                    <i class="fas fa-user"></i> Account
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <h1 class="page-title">My Servers</h1>
+        
+        <button class="create-server-btn" id="createServerBtn">
+            <i class="fas fa-plus"></i> Create new server
+        </button>
+        
+        <div class="servers-list">
+            <!-- Server 1 -->
+            <div class="server-card">
+                <div class="server-info">
+                    <div class="server-name">
+                        Survival World
+                        <span class="status status-online">
+                            <i class="fas fa-circle"></i> Online
+                        </span>
+                    </div>
+                    <div class="server-id">#gHLxasi2PFEsHi0</div>
+                    <div class="server-software">
+                        <i class="fas fa-cube"></i> PaperMC 1.21.4
+                    </div>
+                </div>
+                <div class="server-actions">
+                    <button class="btn-control" onclick="viewServer('survival')">
+                        <i class="fas fa-cog"></i> Manage
+                    </button>
+                    <button class="btn-control btn-start">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Server 2 -->
+            <div class="server-card">
+                <div class="server-info">
+                    <div class="server-name">
+                        Creative Build
+                        <span class="status status-offline">
+                            <i class="fas fa-circle"></i> Offline
+                        </span>
+                    </div>
+                    <div class="server-id">#MeWXvluz5bcEpg9f</div>
+                    <div class="server-software">
+                        <i class="fas fa-cube"></i> PaperMC 1.20.1
+                    </div>
+                </div>
+                <div class="server-actions">
+                    <button class="btn-control" onclick="viewServer('creative')">
+                        <i class="fas fa-cog"></i> Manage
+                    </button>
+                    <button class="btn-control">
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Server 3 -->
+            <div class="server-card">
+                <div class="server-info">
+                    <div class="server-name">
+                        Bedrock Server
+                        <span class="status status-online">
+                            <i class="fas fa-circle"></i> Online
+                        </span>
+                    </div>
+                    <div class="server-id">#Bedr0ckS3rv3r01</div>
+                    <div class="server-software">
+                        <i class="fas fa-mobile-alt"></i> Bedrock Edition
+                    </div>
+                </div>
+                <div class="server-actions">
+                    <button class="btn-control" onclick="viewServer('bedrock')">
+                        <i class="fas fa-cog"></i> Manage
+                    </button>
+                    <button class="btn-control btn-start">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Advertisement Banner (like exaroton) -->
+        <div style="margin-top: 40px; padding: 20px; background: linear-gradient(135deg, var(--card-bg), #1a1f29); border: 1px solid var(--border-color); border-radius: 8px; text-align: center;">
+            <h3 style="color: var(--orange-light); margin-bottom: 8px;">
+                <i class="fas fa-bolt"></i> Boost your server's performance
+            </h3>
+            <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                Get better gameplay with optimized hosting (coming soon)
+            </p>
+            <button style="background: transparent; border: 1px solid var(--orange-primary); color: var(--orange-primary); padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                Learn More
+            </button>
+        </div>
+    </main>
     
-    <h2>My Servers</h2>
-    
-    <div class="server">
-        <h3>Survival World</h3>
-        <p class="online">● Online - 3/10 players</p>
-        <p><strong>IP:</strong> <code>play.example.com:25565</code></p>
-        <button onclick="copyIP('play.example.com:25565')">Copy IP</button>
-        <button onclick="joinServer()">Join Server</button>
-    </div>
-    
-    <div class="server">
-        <h3>Creative Build</h3>
-        <p class="offline">● Offline - Starts when you join</p>
-        <p><strong>IP:</strong> <code>creative.example.com:25565</code></p>
-        <button onclick="copyIP('creative.example.com:25565')">Copy IP</button>
-        <button onclick="startServer()">Start Server</button>
-    </div>
-    
+    <!-- Footer -->
+    <footer class="footer">
+        <p>OrangeCraft &copy; 2025 - Free Minecraft Server Hosting</p>
+        <p style="margin-top: 8px; font-size: 12px; color: var(--text-secondary);">
+            Not affiliated with Mojang, Microsoft, or Aternos. This is a static demo.
+        </p>
+    </footer>
+
     <script>
-        function copyIP(ip) {
-            alert('Copied: ' + ip + '\n\nPaste this in Minecraft to join!');
+        // Create Server Button
+        document.getElementById('createServerBtn').addEventListener('click', function() {
+            alert('Server creation would require backend hosting.\n\nFor now, you can:\n1. Use free hosting (Aternos, PloudOS)\n2. Run a server on your own computer\n3. Use this dashboard to manage existing servers');
+        });
+        
+        // View Server Function
+        function viewServer(serverName) {
+            // In a real app, this would redirect to server.html
+            // For now, we'll simulate with an alert
+            alert(`Opening ${serverName} control panel...\n\nIn a full version, this would show:\n- Console\n- Player list\n- Plugin manager\n- World management\n- Server options\n\nSince this is static, you can create a server.html file for detailed control.`);
+            
+            // Uncomment this to actually redirect when you create server.html:
+            // window.location.href = `server.html?server=${serverName}`;
         }
-        function joinServer() {
-            alert('Open Minecraft > Multiplayer > Add Server > Enter the IP!');
-        }
-        function startServer() {
-            alert('Server starting... This would connect to a real server in the future.');
-        }
+        
+        // Start/Stop buttons
+        document.querySelectorAll('.btn-start').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const serverCard = this.closest('.server-card');
+                const status = serverCard.querySelector('.status');
+                
+                if (this.innerHTML.includes('Start')) {
+                    this.innerHTML = '<i class="fas fa-stop"></i> Stop';
+                    this.classList.remove('btn-start');
+                    status.className = 'status status-online';
+                    status.innerHTML = '<i class="fas fa-circle"></i> Online';
+                    alert('Server starting... (simulated)\n\nIn a real system, this would connect to a hosting API.');
+                } else {
+                    this.innerHTML = '<i class="fas fa-play"></i> Start';
+                    this.classList.add('btn-start');
+                    status.className = 'status status-offline';
+                    status.innerHTML = '<i class="fas fa-circle"></i> Offline';
+                    alert('Server stopping... (simulated)');
+                }
+            });
+        });
+        
+        // Manage buttons
+        document.querySelectorAll('.btn-control:not(.btn-start)').forEach(button => {
+            if (button.innerHTML.includes('Manage')) {
+                button.addEventListener('click', function(e) {
+                    const serverName = this.closest('.server-card').querySelector('.server-name').textContent.split('\n')[0].trim();
+                    viewServer(serverName);
+                });
+            }
+        });
+        
+        console.log('OrangeCraft Aternos Clone loaded!');
     </script>
-    
-    <p style="margin-top: 30px; color: #888;">
-        Add your real server IPs by editing this file!
-    </p>
 </body>
 </html>
