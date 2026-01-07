@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OrangeCraft - Minecraft Dashboard</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: white;
+            font-family: Arial;
+            padding: 20px;
+            text-align: center;
+        }
+        .header {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ff6b35;
+        }
+        .server {
+            background: #0f3460;
+            padding: 15px;
+            margin: 15px auto;
+            border-radius: 8px;
+            max-width: 500px;
+            border: 1px solid #ff6b35;
+        }
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .online { color: #4caf50; }
+        .offline { color: #f44336; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧡 OrangeCraft Dashboard</h1>
+        <p>Free Minecraft Server Manager</p>
+    </div>
+    
+    <h2>My Servers</h2>
+    
+    <div class="server">
+        <h3>Survival World</h3>
+        <p class="online">● Online - 3/10 players</p>
+        <p><strong>IP:</strong> <code>play.example.com:25565</code></p>
+        <button onclick="copyIP('play.example.com:25565')">Copy IP</button>
+        <button onclick="joinServer()">Join Server</button>
+    </div>
+    
+    <div class="server">
+        <h3>Creative Build</h3>
+        <p class="offline">● Offline - Starts when you join</p>
+        <p><strong>IP:</strong> <code>creative.example.com:25565</code></p>
+        <button onclick="copyIP('creative.example.com:25565')">Copy IP</button>
+        <button onclick="startServer()">Start Server</button>
+    </div>
+    
+    <script>
+        function copyIP(ip) {
+            alert('Copied: ' + ip + '\n\nPaste this in Minecraft to join!');
+        }
+        function joinServer() {
+            alert('Open Minecraft > Multiplayer > Add Server > Enter the IP!');
+        }
+        function startServer() {
+            alert('Server starting... This would connect to a real server in the future.');
+        }
+    </script>
+    
+    <p style="margin-top: 30px; color: #888;">
+        Add your real server IPs by editing this file!
+    </p>
+</body>
+</html>
